@@ -50,7 +50,7 @@
     "mafmt": "^6.0.7",
     "multiaddr": "^6.0.6",
     "once": "^1.4.0",
-    "peer-book": "~0.9.1",
+    "peer-book": "justmaier/js-peer-book",
     "peer-id": "~0.12.2",
     "peer-info": "~0.15.1",
     "superstruct": "~0.6.0"

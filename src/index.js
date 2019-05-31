@@ -51,6 +51,7 @@ class Node extends EventEmitter {
     this.datastore = this._options.datastore
     this.peerInfo = this._options.peerInfo
     this.peerBook = this._options.peerBook || new PeerBook()
+    this.peerBook.on('peer:discovery', (peerInfo) => this.emit('peer:discovery', peerInfo))
 
     this._modules = this._options.modules
     this._config = this._options.config
@@ -177,6 +178,7 @@ class Node extends EventEmitter {
 
     // Once we start, emit and dial any peers we may have already discovered
     this.state.on('STARTED', () => {
+      // TODO Consider moving this process into the new autonomous PeerBook
       this.peerBook.getAllArray().forEach((peerInfo) => {
         this.emit('peer:discovery', peerInfo)
         this._maybeConnect(peerInfo)
@@ -463,8 +465,7 @@ class Node extends EventEmitter {
   }
 
   /**
-   * Handles discovered peers. Each discovered peer will be emitted via
-   * the `peer:discovery` event. If auto dial is enabled for libp2p
+   * Handles discovered peers. If auto dial is enabled for libp2p
    * and the current connection count is under the low watermark, the
    * peer will be dialed.
    *
@@ -485,7 +486,6 @@ class Node extends EventEmitter {
 
     if (!this.isStarted()) return
 
-    this.emit('peer:discovery', peerInfo)
     this._maybeConnect(peerInfo)
   }
 
